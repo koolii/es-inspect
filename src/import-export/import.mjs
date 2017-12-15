@@ -1,4 +1,4 @@
-import { Calc, hello, User } from './child';
+import { Calc, hello, User } from './export';
 
 console.log(hello);
 
