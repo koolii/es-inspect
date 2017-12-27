@@ -17,6 +17,7 @@
         "js": "never",
         "mjs": "never"
       }
-    ]
+    ],
+    "no-param-reassign": "off"
   }
 }
