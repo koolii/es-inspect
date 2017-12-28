@@ -13,9 +13,10 @@ const childProcess = require('child_process')
 //   console.log(`* SUCCEEDED CHILD PROCESS: ${JSON.stringify(result, null, '\t')}`)
 // }
 
-const getChildProcess = (callback) => {
+// callbackの代わりにeventEmitterを渡して、処理をやるのもありな気がする
+const doChildProcess = (childPath = './fork-child', callback) => {
   // 0 creaste child process
-  const child = childProcess.fork('./fork-child', [], {
+  const child = childProcess.fork(childPath, [], {
     cwd: path.resolve(__dirname),
     // stdio: 'inherit',
     // silent: false,
@@ -53,7 +54,7 @@ const getChildProcess = (callback) => {
   return child
 }
 
-module.exports = getChildProcess
+module.exports = doChildProcess
 
 // Error[ERR_IPC_DISCONNECTED]: IPC channel is already disconnected
 // at ChildProcess.target.disconnect(internal / child_process.js: 728: 26)
