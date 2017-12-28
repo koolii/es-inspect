@@ -34,7 +34,7 @@ const getChildProcess = (callback) => {
     }
 
     console.log('complete!!')
-    callback(result);
+    callback(result)
 
     // if (result.error) {
     //   errorHandler(child, result)
@@ -57,7 +57,7 @@ module.exports = getChildProcess
 
 // Error[ERR_IPC_DISCONNECTED]: IPC channel is already disconnected
 // at ChildProcess.target.disconnect(internal / child_process.js: 728: 26)
-// at ChildProcess.child.on(/Users/koolii / work / personal / es - inspect / src / example / fork / fork.js: 31: 11)
+// at ChildProcess.child.on
 // at emitTwo(events.js: 126: 13)
 // at ChildProcess.emit(events.js: 214: 7)
 // at emit(internal / child_process.js: 772: 12)
