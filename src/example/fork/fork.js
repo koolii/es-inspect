@@ -34,9 +34,7 @@ const doChildProcess = (childPath = './fork-child', callback) => {
       child.disconnect()
     }
 
-    console.log('complete!!')
     callback(result)
-
     // if (result.error) {
     //   errorHandler(child, result)
     // }
