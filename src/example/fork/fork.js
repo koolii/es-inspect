@@ -14,7 +14,7 @@ const childProcess = require('child_process')
 // }
 
 // callbackの代わりにeventEmitterを渡して、処理をやるのもありな気がする
-const doChildProcess = (childPath = './fork-child', callback) => {
+const doChildProcess = (childPath = './fork-child', sendData, callback) => {
   // 0 creaste child process
   const child = childProcess.fork(childPath, [], {
     cwd: path.resolve(__dirname),
@@ -49,7 +49,7 @@ const doChildProcess = (childPath = './fork-child', callback) => {
     process.kill(child.pid)
   })
 
-  return child
+  child.send(sendData)
 }
 
 module.exports = doChildProcess

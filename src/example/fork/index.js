@@ -1,9 +1,13 @@
 const doChildProcess = require('./fork')
 
-for (let i = 0; i < 100; i += 1) {
-  const child = doChildProcess('./fork-child', (result) => {
-    console.log(result)
-  })
+const resultList = []
 
-  child.send({ data: i })
+for (let i = 0; i < 100; i += 1) {
+  doChildProcess('./fork-child', { data: i }, (result) => {
+    console.log(result)
+    resultList.push(result)
+  })
 }
+
+
+console.log(resultList)
