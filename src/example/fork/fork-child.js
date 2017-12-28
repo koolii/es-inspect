@@ -3,8 +3,8 @@ process.on('message', (packet) => {
 
   try {
     if (packet.data % 7 === 0) {
-      // can't catch Promise.reject()
-      // Promise.reject('promise-reject')
+      // // can't catch Promise.reject()
+      // Promise.reject(new Error('promise-reject'))
 
       // can catch Error
       throw new Error(packet.data)
@@ -19,7 +19,13 @@ process.on('message', (packet) => {
   }
 })
 
+// throwを行なうとここが呼ばれる
 process.on('uncaughtException', (err) => {
   // console.log(`[child] uncaught error: ${err}`)
   process.send({ error: true, ng: null, message: err.message })
+})
+
+// Promise.rejectはこちらが呼ばれる
+process.on('unhandledException', () => {
+  console.log('child-process unhandledException')
 })
