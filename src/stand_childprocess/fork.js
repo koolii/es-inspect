@@ -1,10 +1,10 @@
 const path = require('path')
 const childProcess = require('child_process')
 
-const createChild = (events) => {
-  return new Promise((resolve, reject) => {
+const createChild = () => (
+  new Promise((resolve, reject) => {
     const child = childProcess.fork('./child', [], {
-      cwd: path.resolve(__dirname)
+      cwd: path.resolve(__dirname),
     })
 
     if (!child.connected) {
@@ -23,7 +23,7 @@ const createChild = (events) => {
 
     resolve(child)
   })
-}
+)
 
 module.exports = async () => {
   try {
@@ -34,7 +34,7 @@ module.exports = async () => {
       process: cp,
       setEvents: (events) => {
         const keys = Object.keys(events)
-        keys.forEach(key => {
+        keys.forEach((key) => {
           _.process.on(key, events[key])
         })
       },
@@ -44,7 +44,7 @@ module.exports = async () => {
       send: async (msg) => {
         console.log(`fork-send: ${JSON.stringify(msg)}`)
 
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
           _.process.send(msg)
           _.process.on('message', (res) => {
             if (res.status === 'error') {
@@ -56,7 +56,7 @@ module.exports = async () => {
             resolve(res)
           })
         })
-      }
+      },
     }
 
     return _
