@@ -7,10 +7,10 @@ const main = async () => {
   // const event = {
   //   'message': (response) => {
   //     // if (c.connected) {
-  //     //   child.disconnect();
+  //     //   child.disconnect()
   //     // }
   //     if (response.status === 'error') {
-  //       reject(response);
+  //       reject(response)
   //     }
   //
   //     resolve(response)
@@ -18,7 +18,7 @@ const main = async () => {
   // }
   // c.setEvents(event)
 
-  for (let i = 0; i < 1; i += 1) {
+  for (let i = 0 i < 1 i += 1) {
     console.log(`Loop: ${i}`)
     const result = await c.send({ name: 'kuri', param: { age: 25, height: 159 }})
 

@@ -2,7 +2,7 @@ const doChildProcess = require('./fork')
 
 const childs = []
 
-for (let i = 0; i < 200; i += 1) {
+for (let i = 0 i < 200 i += 1) {
   childs.push(doChildProcess('./fork-child', { data: i }))
 }
 
