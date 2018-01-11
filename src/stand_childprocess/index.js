@@ -1,8 +1,10 @@
 /* eslint-disable no-await-in-loop */
-const fork = require('./fork')
+const Fork = require('./fork')
 
 const main = async () => {
-  const c = await fork()
+  // const c = await fork()
+  const c = new Fork()
+  await c.init()
 
   // 一旦セットされているということで処理
   // const event = {
@@ -19,14 +21,14 @@ const main = async () => {
   // }
   // c.setEvents(event)
 
-  for (let i = 0; i < 1; i += 1) {
+  for (let i = 0; i < 10; i += 1) {
     console.log(`Loop: ${i}`)
     const result = await c.send({ name: 'kuri', param: { age: 25, height: 159 } })
 
     console.log(`fin: ${JSON.stringify(result)}`)
   }
-  // console.log(c)
-  // console.log(JSON.stringify(c))
+
+  c.disconnect()
 }
 
 main()
