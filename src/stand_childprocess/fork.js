@@ -54,14 +54,10 @@ class Fork {
         })
 
         // うまく動かない
-        // child.on('message', (res) => {
-        //   if (res.status === 'error') {
-        //     Promise.reject(new Error('error'))
-        //   }
-        //
-        //   console.log(`fork-message: ${JSON.stringify(res)}`)
-        //   Promise.resolve(res)
-        // })
+        child.on('message', (res) => {
+          // これでも連鎖的に呼び出されることがわかる
+          console.log(`koolii: ${res}, ${JSON.stringify(res)}`)
+        })
 
         resolve(child)
       } catch (err) {
