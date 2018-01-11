@@ -1,5 +1,5 @@
 const log = (name, param, ms = 1000) => (
-  new Promise(resolve => {
+  new Promise((resolve) => {
     setTimeout(() => {
       console.log(`Name: ${name}, Param: ${JSON.stringify(param, null, '\t')}`)
       resolve(param)

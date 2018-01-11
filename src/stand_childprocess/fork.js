@@ -1,40 +1,40 @@
-const path = require('path');
-const childProcess = require('child_process');
+const path = require('path')
+const childProcess = require('child_process')
 
-const createChild = (events) => {
-  return new Promise((resolve, reject) => {
+const createChild = () => (
+  new Promise((resolve, reject) => {
     const child = childProcess.fork('./child', [], {
-      cwd: path.resolve(__dirname)
-    });
+      cwd: path.resolve(__dirname),
+    })
 
     if (!child.connected) {
-      reject(new Error('Not Connected to child process'));
+      reject(new Error('Not Connected to child process'))
     }
 
-    // const eventKeys = Object.keys(events);
+    // const eventKeys = Object.keys(events)
     //
     // eventKeys.forEach(key => {
-    //   child.on(key, events[key]);
-    // });
+    //   child.on(key, events[key])
+    // })
 
     child.on('disconnect', () => {
       process.kill(child.pid)
     })
 
-    resolve(child);
-  });
-};
+    resolve(child)
+  })
+)
 
 module.exports = async () => {
   try {
-    const cp = await createChild();
+    const cp = await createChild()
     console.log('created child process')
 
     const _ = {
       process: cp,
       setEvents: (events) => {
         const keys = Object.keys(events)
-        keys.forEach(key => {
+        keys.forEach((key) => {
           _.process.on(key, events[key])
         })
       },
@@ -44,7 +44,7 @@ module.exports = async () => {
       send: async (msg) => {
         console.log(`fork-send: ${JSON.stringify(msg)}`)
 
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
           _.process.send(msg)
           _.process.on('message', (res) => {
             if (res.status === 'error') {
@@ -56,7 +56,7 @@ module.exports = async () => {
             resolve(res)
           })
         })
-      }
+      },
     }
 
     return _
