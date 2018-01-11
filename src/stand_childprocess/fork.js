@@ -53,10 +53,10 @@ class Fork {
           process.kill(child.pid)
         })
 
-        // うまく動かない
+        // if this call returns anything, it doesn't occur anything
         child.on('message', (res) => {
-          // これでも連鎖的に呼び出されることがわかる
-          console.log(`koolii: ${res}, ${JSON.stringify(res)}`)
+          // you can understand that setted child-callback executes consecutively
+          console.log(`logger: ${res}, ${JSON.stringify(res)}`)
         })
 
         resolve(child)
