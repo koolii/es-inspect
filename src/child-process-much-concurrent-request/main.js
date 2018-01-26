@@ -15,7 +15,7 @@ const main = async () => {
   }
 
   await Promise.all(promise)
-  process.kill(process.pid)
+  child.disconnect()
 }
 
 main()
