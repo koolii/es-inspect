@@ -13,7 +13,7 @@ const forkC = (childPath, arg) => (
       }
 
       child.on('message', (result) => {
-        console.log(`[parent]message: ${result}`)
+        console.log(`[onMessage]message: ${result}`)
       })
       child.on('disconnect', () => {
         console.log('[parent]disconnect')
@@ -33,11 +33,15 @@ const forkC = (childPath, arg) => (
 const send = (child, req) => (
   new Promise((resolve) => {
     child.once('message', (result) => {
-      console.log(`[parent-reply]message: ${result}`)
+      console.log(`[onceMessage]message: ${result}`)
       resolve(result)
     })
     child.send(req)
   })
 )
 
-module.exports = { forkC, send }
+const disconnect = (child) => {
+  process.kill(child.pid)
+}
+
+module.exports = { forkC, send, disconnect }
