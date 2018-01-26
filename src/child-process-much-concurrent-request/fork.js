@@ -25,8 +25,7 @@ module.exports = class Fork {
         }
 
         child.on('message', (response) => {
-          const id = response.id
-          // console.log(`[onMessage] ${id}`)
+          const { id } = response
           console.log(`[STORE] resolvers are [${Object.keys(this.store)}]`)
 
           // this.storeからreq.id==response.idで一意に定めたresolverを実行

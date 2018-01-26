@@ -1,9 +1,7 @@
 const Fork = require('./fork')
 
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000))
-const path = './child'
 const main = async () => {
-  const child = new Fork(path)
+  const child = new Fork('./child')
   await child.create()
 
   const sendMessage = async (id) => {
@@ -13,9 +11,6 @@ const main = async () => {
 
   const promise = []
   for (let i = 0; i < 10; i += 1) {
-    // const result = await child.send({ id: i, msg: `[id: ${i}] dummy message` })
-    // console.log(`RESULT IS ${JSON.stringify(result)}`)
-    // await sleep()
     promise.push(sendMessage(i))
   }
 
