@@ -1,47 +1,68 @@
-const path = require('path')
+const pathResolver = require('path')
 const childProcess = require('child_process')
 
-const forkC = (childPath, arg) => (
-  new Promise((resolve, reject) => {
-    try {
-      const child = childProcess.fork(childPath, arg, {
-        cwd: path.resolve(__dirname),
-      })
+module.exports = class Fork {
+  constructor(path) {
+    // 単純な構造だと、例えばユーザ単位で複数のアクションがあると一括で削除しかねないから危ない
+    this.store = {}
+    this.path = path
+    this.cp = null
+  }
 
-      if (!child.connected) {
-        reject(new Error('failed to create child process'))
+  async create() {
+    this.cp = await this.createCp()
+  }
+
+  createCp() {
+    return new Promise((resolve, reject) => {
+      try {
+        const child = childProcess.fork(this.path, [], {
+          cwd: pathResolver.resolve(__dirname),
+        })
+
+        if (!child.connected) {
+          reject(new Error('failed to create child process'))
+        }
+
+        child.on('message', (response) => {
+          const id = response.id
+          // console.log(`[onMessage] ${id}`)
+          console.log(`[STORE] resolvers are [${Object.keys(this.store)}]`)
+
+          // this.storeからreq.id==response.idで一意に定めたresolverを実行
+          const done = this.store[id]
+          delete this.store[id]
+
+          done(response)
+        })
+        child.on('disconnect', () => {
+          console.log('[PARENT] disconnect child process')
+          process.kill(child.pid)
+        })
+
+        resolve(child)
+      } catch (err) {
+        reject(err.message || err)
       }
-
-      child.on('message', (result) => {
-        console.log(`[onMessage]message: ${result}`)
-      })
-      child.on('disconnect', () => {
-        console.log('[parent]disconnect')
-        process.kill(child.pid)
-      })
-      child.on('unhandledRejection', (err) => {
-        console.log(`[parent]unhandledRejection: ${err}`)
-      })
-
-      resolve(child)
-    } catch (err) {
-      reject(err.message || err)
-    }
-  })
-)
-
-const send = (child, req) => (
-  new Promise((resolve) => {
-    child.once('message', (result) => {
-      console.log(`[onceMessage]message: ${result}`)
-      resolve(result)
     })
-    child.send(req)
-  })
-)
+  }
 
-const disconnect = (child) => {
-  process.kill(child.pid)
+  // Promiseの終了をフックをインスタンス側に持たせる
+  setResolver(id, resolver) {
+    // これで全体でユーザからのリクエストをresolveさせることが可能になる
+    this.store[id] = resolver
+  }
+
+  // この時点でsend()はPromiseを返却しているから、あとはいつどこでresolveを実行するか
+  send(id, msg) {
+    return new Promise((resolve) => {
+      // const id = id; // ちゃんと作るならuuidを生成等を行なう
+      this.setResolver(id, resolve)
+      this.cp.send({ id, msg })
+    })
+  }
+
+  disconnect() {
+    process.kill(this.cp.pid)
+  }
 }
-
-module.exports = { forkC, send, disconnect }
