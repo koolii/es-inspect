@@ -14,7 +14,7 @@ const init = () => {
   return array
 }
 
-const search = (array, target) => {
+const getRoughPos = (array, target) => {
   let head = 0
   let tail = array.length
 
@@ -32,11 +32,25 @@ const search = (array, target) => {
     }
   }
   // console.log(`val: ${array[tail]}`)
-  return tail === -1 ? 0 : tail
+  return tail < 0 ? 0 : tail
+}
+
+const search = (array, target) => {
+  let pos = getRoughPos(array, target)
+
+  if (pos !== 0) {
+    while (array[pos] === array[pos - 1]) {
+      console.log(pos)
+      pos -= 1
+    }
+  }
+
+  return pos
 }
 
 (() => {
   const array = init()
+  console.log(search(array, 14))
   console.log(search(array, Date.now() + 30))
 })()
 
